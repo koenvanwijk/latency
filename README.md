@@ -56,3 +56,21 @@ De interactieve site (D3) wordt automatisch gebouwd uit het Excel-bestand en via
 
 
 ![OpenGraph image](site/og-image.png)
+
+
+## Live Excel uit Google Sheets / Drive
+
+Je kunt CI automatisch jouw Excel van Google laten halen. Zet een **publish/export**-link in een repo **Variable** of **Secret** met naam `INPUT_XLSX_URL`:
+
+- **Google Sheets (Publish to web → XLSX)**:  
+  `https://docs.google.com/spreadsheets/d/{SHEET_ID}/export?format=xlsx`
+  - Specifieke tab: `...&gid=0`
+- **Google Drive (bestand-ID)**:  
+  Publiek: `https://drive.google.com/uc?export=download&id={FILE_ID}`
+
+**Instellen in GitHub:**
+1. Ga naar _Settings → Secrets and variables → Actions_.
+2. Voeg **Variables** of **Secrets** toe: `INPUT_XLSX_URL` met jouw export-URL.
+3. Trigger de workflow (push of _Run workflow_) of wacht op de **hourly** Pages-run.
+
+> De workflows valideren: als `INPUT_XLSX_URL` leeg is, gebruiken ze het voorbeeldbestand.

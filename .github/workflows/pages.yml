@@ -3,6 +3,8 @@ name: Pages
 on:
   push:
   workflow_dispatch:
+  schedule:
+    - cron: '0 * * * *'  # hourly refresh'
 
 permissions:
   contents: read
@@ -27,8 +29,18 @@ jobs:
       - name: Install Python dependencies
         run: pip install -r requirements.txt
 
+      - name: Download Excel from Google (if configured)
+        if: ${{ vars.INPUT_XLSX_URL != '' || secrets.INPUT_XLSX_URL != '' }}
+        run: |
+          URL="${{ vars.INPUT_XLSX_URL }}"; if [ -z "$URL" ]; then URL="${{ secrets.INPUT_XLSX_URL }}"; fi
+          echo "Using Excel URL: $URL"
+          curl -L "$URL" -o examples/model.xlsx
+
       - name: Build JSON from Excel
-        run: python src/build_json_from_excel.py examples/Teleop_Latency_Model_SO100_WebRTC_v3.xlsx site/data
+        run: |
+          IN=examples/model.xlsx
+          if [ ! -f "$IN" ]; then IN=examples/Teleop_Latency_Model_SO100_WebRTC_v3.xlsx; fi
+          python src/build_json_from_excel.py "$IN" site/data
 
       - name: Upload artifact (site)
         uses: actions/upload-pages-artifact@v3
