@@ -10,3 +10,13 @@ select { padding: 6px 10px; font-size: 14px; }
 .error { color: #b00020; }
 .badge { vertical-align: middle; }
 footer { margin-top: 36px; font-size: 12px; color: #666; }
+
+
+@media (prefers-color-scheme: dark) {
+  body { background: #121214; color: #eaeaea; }
+  .tooltip { background: #1e1e22; border-color: #333; color: #eaeaea; }
+  select { background: #1e1e22; color: #eaeaea; border: 1px solid #333; }
+  .lane-title { color: #eaeaea; }
+  .step-name { fill: #eaeaea; }
+  .step-ms { fill: #ddd; }
+}

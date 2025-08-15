@@ -10,7 +10,23 @@ async function loadData(scenario) {
   return await resp.json();
 }
 
+
+// THEME: pick colors depending on light/dark preference
+function theme() {
+  const dark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+  return {
+    bgLane: dark ? '#2a2a31' : '#f0f0f0',
+    boxFill: dark ? '#1c1c22' : 'white',
+    boxStroke: dark ? '#777' : '#999',
+    text: dark ? '#eaeaea' : '#222',
+    title: dark ? '#eaeaea' : '#222',
+    connector: dark ? '#999' : '#bbb'
+  };
+}
+
 function render(data) {
+  const th = theme();
+
   const container = d3.select("#diagram");
   container.selectAll("*").remove();
 
@@ -36,7 +52,7 @@ function render(data) {
     .attr("x", width/2).attr("y", 18)
     .attr("text-anchor", "middle")
     .attr("font-size", "16px").attr("font-weight", "600")
-    .text(`Overall Command→Photon: ${data.overall.toFixed(1)} ms`);
+    .attr("fill", th.title).text(`Overall Command→Photon: ${data.overall.toFixed(1)} ms`);
 
   // Tooltip
   const tooltip = d3.select("body").append("div")
@@ -52,7 +68,7 @@ function render(data) {
     g.append("rect")
       .attr("x", x).attr("y", y)
       .attr("width", laneWidth).attr("height", maxSteps * stepHeight + headerHeight)
-      .attr("fill", "#f0f0f0").attr("rx", 10);
+      .attr("fill", th.bgLane).attr("rx", 10);
 
     // Header with toggle
     const header = g.append("g").attr("transform", `translate(${x+10},${y+24})`);
@@ -78,8 +94,8 @@ function render(data) {
         .attr("x", 0).attr("y", gy)
         .attr("width", laneWidth-20).attr("height", stepHeight-10)
         .attr("rx", 8)
-        .attr("fill", s.color || "white")
-        .attr("stroke", "#999")
+        .attr("fill", s.color || th.boxFill)
+        .attr("stroke", th.boxStroke)
         .on("mouseover", (event) => {
           tooltip.transition().duration(150).style("opacity", 0.95);
           tooltip.html(`<strong>${s.name}</strong><br>${s.ms.toFixed(1)} ms`)
@@ -111,7 +127,7 @@ function render(data) {
           .attr("y1", y1)
           .attr("x2", x + laneWidth - 10)
           .attr("y2", y2)
-          .attr("stroke", "#bbb").attr("marker-end", "url(#arrow)");
+          .attr("stroke", th.connector).attr("marker-end", "url(#arrow)");
       }
     });
   });
@@ -147,3 +163,11 @@ document.addEventListener("DOMContentLoaded", () => {
 
   applyScenario("Typical");
 });
+
+
+const mql = window.matchMedia('(prefers-color-scheme: dark)');
+if (mql && mql.addEventListener) {
+  mql.addEventListener('change', () => {
+    applyScenario(document.getElementById('scenario').value);
+  });
+}
