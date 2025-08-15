@@ -54,3 +54,5 @@ De interactieve site (D3) wordt automatisch gebouwd uit het Excel-bestand en via
 1. Ga naar *Settings → Pages* en kies *GitHub Actions* als bron (of laat de workflow dit afhandelen).
 2. De site staat op: `https://OWNER.github.io/REPO/` (vervang koenvanwijk/latency).
 
+
+![OpenGraph image](site/og-image.png)
