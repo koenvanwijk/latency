@@ -1,0 +1,72 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8" />
+  <title>WebRTC getStats Collector</title>
+  <style> body { font-family: sans-serif; margin: 24px; } textarea { width: 100%; height: 240px; } </style>
+</head>
+<body>
+  <h1>WebRTC getStats Collector</h1>
+  <p>Open je WebRTC stream (app/tab) en plak hieronder de JSON van <code>RTCPeerConnection.getStats()</code>.</p>
+  <textarea id="in"></textarea>
+  <button id="parse">Parse</button>
+  <pre id="out"></pre>
+<script>
+document.getElementById('parse').onclick = () => {
+  try {
+    const stats = JSON.parse(document.getElementById('in').value);
+    let result = {};
+    const map = new Map(Object.entries(stats));
+    for (const [k,v] of map) {
+      if (v.type === 'inbound-rtp' && v.kind === 'video') {
+        result.video_inbound = {
+          jitterBufferDelay: v.jitterBufferDelay,
+          jitterBufferEmittedCount: v.jitterBufferEmittedCount,
+          framesDecoded: v.framesDecoded,
+          totalDecodeTime: v.totalDecodeTime,
+          jitter: v.jitter,
+          packetsLost: v.packetsLost,
+          framesPerSecond: v.framesPerSecond
+        };
+      }
+      if (v.type === 'outbound-rtp' && v.kind === 'video') {
+        result.video_outbound = {
+          framesEncoded: v.framesEncoded,
+          totalEncodeTime: v.totalEncodeTime,
+          bytesSent: v.bytesSent,
+          retransmittedPacketsSent: v.retransmittedPacketsSent
+        };
+      }
+      if (v.type === 'candidate-pair' && v.nominated) {
+        result.path = {
+          currentRoundTripTime: v.currentRoundTripTime,
+          availableOutgoingBitrate: v.availableOutgoingBitrate
+        };
+      }
+    }
+    if (result.video_inbound) {
+      const ji = result.video_inbound;
+      if (ji.jitterBufferDelay && ji.jitterBufferEmittedCount) {
+        result.derived = result.derived || {};
+        result.derived = {...result.derived, jitterBuffer_ms: 1000*(ji.jitterBufferDelay/ji.jitterBufferEmittedCount)};
+      }
+      if (ji.totalDecodeTime && ji.framesDecoded) {
+        result.derived = result.derived || {};
+        result.derived = {...result.derived, decode_ms: 1000*(ji.totalDecodeTime/ji.framesDecoded)};
+      }
+    }
+    if (result.video_outbound) {
+      const jo = result.video_outbound;
+      if (jo.totalEncodeTime && jo.framesEncoded) {
+        result.derived = result.derived || {};
+        result.derived = {...result.derived, encode_ms: 1000*(jo.totalEncodeTime/jo.framesEncoded)};
+      }
+    }
+    document.getElementById('out').textContent = JSON.stringify(result, null, 2);
+  } catch(e) {
+    document.getElementById('out').textContent = "Parse error: " + e;
+  }
+};
+</script>
+</body>
+</html>
