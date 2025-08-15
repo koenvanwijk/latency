@@ -1,0 +1,27 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Teleop Latency – Interactive Swimlane</title>
+  <link rel="stylesheet" href="styles.css" />
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/7.9.0/d3.min.js" integrity="sha512-0xqkK2yW6hF2m43vC3tq9rJ1T6oRu+ZkV1g0WXl4xZxB8h3ut+LQ4c9gPZbZiz2kMJjT8pc0H3xC1FfG1sN6gQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+</head>
+<body>
+  <h1>Teleop Latency – Interactive Swimlane</h1>
+  <div class="controls">
+    <label for="scenario">Scenario</label>
+    <select id="scenario"></select>
+    <span>Current: <strong id="currentScenario">–</strong></span>
+    <span class="spacer"></span>
+    <a href="https://github.com/OWNER/REPO/actions/workflows/pages.yml" target="_blank">
+      <img class="badge" src="https://github.com/OWNER/REPO/actions/workflows/pages.yml/badge.svg" alt="Pages CI" />
+    </a>
+  </div>
+  <div id="diagram"></div>
+  <footer>
+    Data wordt door CI uit Excel gegenereerd (Best/Typical/Worst). Hover voor details, klik op lane-titel om te togglen.
+  </footer>
+  <script src="app.js"></script>
+</body>
+</html>

@@ -1,0 +1,47 @@
+name: Pages
+
+on:
+  push:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install system dependencies (Graphviz not required)
+        run: sudo apt-get update
+
+      - name: Install Python dependencies
+        run: pip install -r requirements.txt
+
+      - name: Build JSON from Excel
+        run: python src/build_json_from_excel.py examples/Teleop_Latency_Model_SO100_WebRTC_v3.xlsx site/data
+
+      - name: Upload artifact (site)
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: site
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4

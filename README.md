@@ -43,3 +43,14 @@ python src/make_swimlane_from_excel.py examples/Teleop_Latency_Model_SO100_WebRT
 ## Licentie
 
 MIT
+
+## Website (GitHub Pages)
+
+![Pages](https://github.com/OWNER/REPO/actions/workflows/pages.yml/badge.svg)
+
+De interactieve site (D3) wordt automatisch gebouwd uit het Excel-bestand en via GitHub Pages gedeployed.
+
+**Na push:**
+1. Ga naar *Settings → Pages* en kies *GitHub Actions* als bron (of laat de workflow dit afhandelen).
+2. De site staat op: `https://OWNER.github.io/REPO/` (vervang OWNER/REPO).
+
