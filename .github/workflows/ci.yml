@@ -1,0 +1,35 @@
+name: CI
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        scenario: [Best, Typical, Worst]
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install system dependencies (Graphviz)
+        run: sudo apt-get update && sudo apt-get install -y graphviz
+
+      - name: Install Python dependencies
+        run: pip install -r requirements.txt
+
+      - name: Generate diagram (${{ matrix.scenario }})
+        run: python src/make_swimlane_from_excel.py examples/Teleop_Latency_Model_SO100_WebRTC_v3.xlsx teleop_latency_${{ matrix.scenario }}.png ${{ matrix.scenario }}
+
+      - name: Upload artifact (${{ matrix.scenario }})
+        uses: actions/upload-artifact@v4
+        with:
+          name: teleop-latency-diagram-${{ matrix.scenario }}
+          path: teleop_latency_${{ matrix.scenario }}.png
