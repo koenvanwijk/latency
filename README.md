@@ -1,6 +1,6 @@
 # Teleop Latency Diagram
 
-> **CI status:** ![CI](https://github.com/OWNER/REPO/actions/workflows/ci.yml/badge.svg)
+> **CI status:** ![CI](https://github.com/koenvanwijk/latency/actions/workflows/ci.yml/badge.svg)
 
 Swimlane-diagram generator voor een SO100↔SO100 teleoperatieketen (Python USB-serial, WebRTC op Jetson).
 Leest **Inputs** uit een Excel-model en bouwt een **Command→Photon** flow met totaaltijden.
@@ -46,11 +46,11 @@ MIT
 
 ## Website (GitHub Pages)
 
-![Pages](https://github.com/OWNER/REPO/actions/workflows/pages.yml/badge.svg)
+![Pages](https://github.com/koenvanwijk/latency/actions/workflows/pages.yml/badge.svg)
 
 De interactieve site (D3) wordt automatisch gebouwd uit het Excel-bestand en via GitHub Pages gedeployed.
 
 **Na push:**
 1. Ga naar *Settings → Pages* en kies *GitHub Actions* als bron (of laat de workflow dit afhandelen).
-2. De site staat op: `https://OWNER.github.io/REPO/` (vervang OWNER/REPO).
+2. De site staat op: `https://OWNER.github.io/REPO/` (vervang koenvanwijk/latency).
 
