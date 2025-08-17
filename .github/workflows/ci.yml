@@ -26,9 +26,9 @@ jobs:
         run: pip install -r requirements.txt
 
       - name: Download Excel from Google (if configured)
-        if: ${{ vars.INPUT_XLSX_URL != '' || secrets.INPUT_XLSX_URL != '' }}
+        if: ${{ vars.INPUT_XLSX_URL != '' }}
         run: |
-          URL="${{ vars.INPUT_XLSX_URL }}"; if [ -z "$URL" ]; then URL="${{ secrets.INPUT_XLSX_URL }}"; fi
+          URL="${{ vars.INPUT_XLSX_URL }}"
           echo "Using Excel URL: $URL"
           curl -L "$URL" -o examples/model.xlsx
 
